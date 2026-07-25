@@ -1,0 +1,399 @@
+package com.mytiantian.updater.vivo
+
+import android.content.Context
+import android.util.Log
+import com.mytiantian.updater.crypto.VivoCrypto
+import java.io.BufferedReader
+import java.io.ByteArrayInputStream
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.LinkedHashMap
+import java.util.Random
+import java.util.zip.CRC32
+import java.util.zip.GZIPInputStream
+
+class VivoOtaClient(private val context: Context) {
+
+    companion object {
+        private const val TAG = "VivoOtaClient"
+        private const val TOKEN_NATIVE = "jnisgmain_v2@com.bbk.updater"
+        private const val OTA_URL = "https://sysupgrade.vivo.com.cn/vgc/v2/getVgcAndPatch.do"
+        private const val REDIR_URL = "https://sysupgrade.vivo.com.cn/pk/redirPost.do"
+    }
+
+    fun initCrypto(): Boolean {
+        VivoCrypto.clearServerUrl(context)
+        return VivoCrypto.init(context)
+    }
+
+    fun query(
+        codename: String,
+        modelSwVer: String,
+        swVersion: String,
+        androidVersion: Int,
+        isPhone: Boolean,
+        isFull: Boolean,
+        sn: String = "A0000000000000A"
+    ): VivoOtaResult {
+        val hwVer = codename + "MA"
+        val fullSwVersion = if (swVersion.contains(".W")) "$swVersion.V000L1" else swVersion
+        val fullVer = if (swVersion.contains(".W")) "${codename}_A_$swVersion.V000L1" else "${codename}_A_$swVersion"
+        val versionLong = if (swVersion.contains(".W")) "${codename}_N_${codename}MA_$swVersion.V000L1" else "${codename}_N_${codename}MA_$swVersion"
+
+        val ts = SimpleDateFormat("yy_MM_dd-HH_mm_ss").format(Date())
+        val random = Random()
+        val elapsedtime = if (isPhone) 140000 + random.nextInt(80000) else 2000000 + random.nextInt(500000)
+        val isFullInt = if (isFull) 1 else 0
+
+        val p = LinkedHashMap<String, Any>()
+        p["vgcNewActiveVer"] = ""
+        p["nt"] = "WIFI"
+        p["vgcSwVer"] = "1.1.1"
+        p["fullVer"] = fullVer
+        p["emmcid"] = ""
+        p["sm1"] = "null"
+        p["sm2"] = "null"
+        p["model"] = codename
+        p["hasVgc"] = 1
+        p["vgcNewPassiveVer"] = ""
+        p["ch"] = "N"
+        p["gn"] = 0
+        p["newActiveVer"] = ""
+        p["version"] = versionLong
+        p["st2"] = 0
+        p["cu"] = "N"
+        p["srm2"] = 0
+        p["srm1"] = 0
+        p["cy"] = "CN-ZH"
+        p["sn2"] = "null"
+        p["ne"] = "null"
+        p["sn1"] = "null"
+        p["public_model"] = modelSwVer
+        p["newPassiveVer"] = ""
+        p["hwVer"] = hwVer
+        p["swVer"] = fullSwVersion
+        p["language"] = "zh_CN"
+        p["isMan"] = 1
+        p["isFull"] = isFullInt
+        p["protocalversion"] = "1.0"
+        p["checkTrige"] = "MANUL"
+        p["isstlifeover"] = "false"
+        p["hwFingerprint"] = ""
+
+        if (isPhone) {
+            p["vgcCu"] = "V000"
+            p["sf"] = 1
+            p["si"] = "null"
+            p["dType"] = "phone"
+            p["s_n"] = "null"
+            p["elapsedtime"] = elapsedtime
+            p["st1"] = 100000 + random.nextInt(60000)
+            p["imei"] = "000000000000000"
+            p["ms"] = 0
+            p["mtype"] = "no"
+            p["radiotype"] = "L"
+        } else {
+            p["romVersion"] = "Funtouch $androidVersion.0"
+            p["occurTime"] = ts
+            p["vgcCu"] = "NULL"
+            p["battery"] = 69
+            p["sf"] = 0
+            p["si"] = ""
+            p["oem"] = "${codename}_CN-ZH_FULL_SC_NULL"
+            p["dType"] = "tablet"
+            p["oemProjects"] = "$codename+${codename}B"
+            p["verName"] = "1.1.1.1"
+            p["elapsedtime"] = elapsedtime
+            p["verCode"] = "000000001"
+            p["st1"] = 0
+            p["snp"] = sn
+            p["imei"] = ""
+            p["sdkVersion"] = 34
+            p["isCharge"] = "false"
+            p["ms"] = -1
+            p["mtype"] = "FULL_SC"
+            p["radiotype"] = "A"
+        }
+
+        val rawParams = joinParams(p)
+        Log.d(TAG, "Request params: $rawParams")
+
+        val updateResponse = sendFreshEncryptedRequest(rawParams)
+        if (updateResponse.startsWith("[Error]")) {
+            throw RuntimeException(updateResponse)
+        }
+
+        return parseResult(updateResponse, isPhone, modelSwVer, codename, swVersion)
+    }
+
+    private fun parseResult(
+        updateResponse: String,
+        isPhone: Boolean,
+        modelSwVer: String,
+        codename: String,
+        swVersion: String
+    ): VivoOtaResult {
+        val updateVersion = extractJsonStr(updateResponse, "version\":\"")
+        val pkName = extractJsonStr(updateResponse, "pkName\":\"")
+        val pkLen = extractJsonStr(updateResponse, "pkLen\":\"")
+        val sizeMb = try { (pkLen.toLong() / 1048576).toString() } catch (_: Exception) { "" }
+
+        var downloadUrl = ""
+        var changelogUrl = ""
+
+        val pkUrl = extractPkUrl(updateResponse)
+        if (pkUrl != null) {
+            try {
+                val queryStart = pkUrl.indexOf("?")
+                val redirParams = if (queryStart >= 0) pkUrl.substring(queryStart + 1) else pkUrl
+                val redirRes = requestRedirPost(redirParams)
+                val dataIdx = redirRes.indexOf("\"data\":\"")
+                if (dataIdx >= 0) {
+                    val urlStart = dataIdx + 8
+                    val urlEnd = redirRes.indexOf("\"", urlStart)
+                    if (urlEnd > urlStart) {
+                        downloadUrl = redirRes.substring(urlStart, urlEnd).replace("\\/", "/")
+                    }
+                }
+                changelogUrl = extractJsonStr(updateResponse, "h5Url\":\"").replace("\\/", "/")
+            } catch (e: Exception) {
+                Log.w(TAG, "redirPost failed: ${e.message}")
+            }
+        }
+
+        return VivoOtaResult(
+            updateVersion = updateVersion,
+            filename = pkName,
+            fileSizeBytes = pkLen,
+            fileSizeMb = sizeMb,
+            downloadUrl = downloadUrl,
+            changelogUrl = changelogUrl,
+            rawResponse = updateResponse
+        )
+    }
+
+    private fun joinParams(params: Map<String, Any>): String {
+        return params.entries.joinToString("&") { "${it.key}=${it.value}" }
+    }
+
+    private fun extractPkUrl(json: String): String? {
+        val url = extractJsonStr(json, "pk\":\"")
+        return if (url == "(Not found)") null else url
+    }
+
+    private fun extractJsonStr(json: String, key: String): String {
+        val idx = json.indexOf(key)
+        if (idx < 0) return "(Not found)"
+        val start = idx + key.length
+        val end = json.indexOf('"', start)
+        if (end < 0) {
+            val end2 = json.indexOf(',', start)
+            val end3 = json.indexOf('}', start)
+            val realEnd = if (end2 in start until end3) end2 else end3
+            return if (realEnd < 0) json.substring(start) else json.substring(start, realEnd).trim()
+        }
+        return json.substring(start, end)
+    }
+
+    // ================================================================
+    // Protocol: encrypt → package → base64url
+    // ================================================================
+
+    private fun encryptToJvq(plaintext: String): String {
+        val encrypted = VivoCrypto.encrypt(plaintext.toByteArray(StandardCharsets.UTF_8))
+            ?: throw RuntimeException("Encryption failed")
+        val pkg = buildProtocolPackage(5, 2, TOKEN_NATIVE, encrypted)
+        return base64UrlEncode(pkg)
+    }
+
+    private fun decryptResponse(responseB64: String): String {
+        val fullPackage = base64UrlDecode(responseB64)
+        val encryptedBody = extractEncryptedBody(fullPackage)
+        val decrypted = VivoCrypto.decrypt(encryptedBody)
+            ?: throw RuntimeException("Decryption failed")
+        return String(decrypted, StandardCharsets.UTF_8)
+    }
+
+    private fun buildProtocolPackage(type: Int, keyVersion: Int, token: String, data: ByteArray): ByteArray {
+        val tokenBytes = token.toByteArray(StandardCharsets.UTF_8)
+        val headerTotalLen = 16 + tokenBytes.size
+
+        val headerFieldBos = java.io.ByteArrayOutputStream()
+        val headerFieldDos = DataOutputStream(headerFieldBos)
+        headerFieldDos.writeShort(1)
+        headerFieldDos.writeByte(tokenBytes.size)
+        headerFieldDos.write(tokenBytes)
+        headerFieldDos.writeShort(keyVersion)
+        headerFieldDos.writeByte(type)
+        val headerFieldBytes = headerFieldBos.toByteArray()
+
+        val crc32 = CRC32()
+        crc32.update(headerFieldBytes)
+
+        val bos = java.io.ByteArrayOutputStream()
+        val dos = DataOutputStream(bos)
+        dos.writeShort(headerTotalLen)
+        dos.writeLong(crc32.value)
+        dos.write(headerFieldBytes)
+        dos.write(data)
+        return bos.toByteArray()
+    }
+
+    private fun extractEncryptedBody(fullPackage: ByteArray): ByteArray {
+        val dis = DataInputStream(ByteArrayInputStream(fullPackage))
+        val headerLen = dis.readUnsignedShort()
+        val payloadLen = fullPackage.size - headerLen
+        val payload = ByteArray(payloadLen)
+        System.arraycopy(fullPackage, headerLen, payload, 0, payloadLen)
+        return payload
+    }
+
+    private fun base64UrlEncode(data: ByteArray): String {
+        return java.util.Base64.getUrlEncoder().encodeToString(data)
+    }
+
+    private fun base64UrlDecode(data: String): ByteArray {
+        val decoded = URLDecoder.decode(data, "UTF-8").replace('-', '+').replace('_', '/')
+        val pad = 4 - decoded.length % 4
+        val padded = if (pad != 4) decoded + "=".repeat(pad) else decoded
+        return java.util.Base64.getDecoder().decode(padded)
+    }
+
+    // ================================================================
+    // HTTP
+    // ================================================================
+
+    private fun sendFreshEncryptedRequest(plaintext: String): String {
+        val jvqParam = encryptToJvq(plaintext)
+        val response = httpPost(OTA_URL, "jvq_param=$jvqParam")
+        return if (!response.startsWith("ACw") && !response.startsWith("ACo")) {
+            "[Error] $response"
+        } else {
+            decryptResponse(response)
+        }
+    }
+
+    private fun requestRedirPost(params: String): String {
+        val jvqParam = encryptToJvq(params)
+        val response = httpPost(REDIR_URL, "jvq_param=$jvqParam")
+        return if (!response.startsWith("ACw") && !response.startsWith("ACo")) {
+            "[Error] $response"
+        } else {
+            decryptResponse(response)
+        }
+    }
+
+    private fun httpPost(urlString: String, body: String): String {
+        val url = URL(urlString)
+        val conn = url.openConnection() as HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+        conn.setRequestProperty("User-Agent", "okhttp/4.3.23")
+        conn.setRequestProperty("Host", "sysupgrade.vivo.com.cn")
+        conn.setRequestProperty("Connection", "Keep-Alive")
+        conn.setRequestProperty("Accept-Encoding", "gzip")
+        conn.doOutput = true
+
+        conn.outputStream.use { it.write(body.toByteArray(StandardCharsets.UTF_8)) }
+
+        val code = conn.responseCode
+        val is_ = if (code >= 400) conn.errorStream else conn.inputStream
+        val inputStream = if ("gzip" == conn.contentEncoding) GZIPInputStream(is_) else is_
+
+        val resp = StringBuilder()
+        BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8)).use { reader ->
+            var line: String?
+            while (reader.readLine().also { line = it } != null) resp.append(line)
+        }
+        return resp.toString()
+    }
+
+    fun fetchChangelog(url: String): String? {
+        if (url.isEmpty()) return null
+        return try {
+            val json = httpGet(url)
+            parseChangelogJson(json)
+        } catch (e: Exception) {
+            Log.w(TAG, "Changelog fetch failed: ${e.message}")
+            null
+        }
+    }
+
+    private fun httpGet(urlString: String): String {
+        val url = URL(urlString)
+        val conn = url.openConnection() as HttpURLConnection
+        conn.requestMethod = "GET"
+        conn.connectTimeout = 10000
+        conn.readTimeout = 10000
+        val code = conn.responseCode
+        val is_ = if (code >= 400) conn.errorStream else conn.inputStream
+        val inputStream = if ("gzip" == conn.contentEncoding) GZIPInputStream(is_) else is_
+        val resp = StringBuilder()
+        BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8)).use { reader ->
+            var line: String?
+            while (reader.readLine().also { line = it } != null) resp.append(line)
+        }
+        return resp.toString()
+    }
+
+    private fun parseChangelogJson(jsonText: String): String {
+        val data = JSONObject(jsonText)
+        val lines = mutableListOf<String>()
+
+        data.optString("headContent", "").takeIf { it.isNotBlank() }?.let { lines.add(it) }
+
+        val body = data.optJSONArray("body") ?: return lines.joinToString("\n")
+        for (i in 0 until body.length()) {
+            val item = body.optJSONObject(i) ?: continue
+            appendChangelogSection(item, lines)
+        }
+        return lines.joinToString("\n").trim()
+    }
+
+    private fun appendChangelogSection(item: JSONObject, lines: MutableList<String>, level: Int = 0) {
+        val title = item.optString("title", "").trim()
+        if (title.isNotEmpty()) {
+            if (lines.isNotEmpty() && lines.last().isNotEmpty()) lines.add("")
+            lines.add(title)
+        }
+
+        val descContents = item.optJSONArray("descContents")
+        if (descContents != null) {
+            for (j in 0 until descContents.length()) {
+                val entry = descContents.opt(j) ?: continue
+                when (entry) {
+                    is String -> if (entry.trim().isNotEmpty()) lines.add("  • ${entry.trim()}")
+                    is JSONObject -> {
+                        val content = entry.optString("content", "").ifEmpty { entry.optString("text", "") }
+                        if (content.trim().isNotEmpty()) lines.add("  • ${content.trim()}")
+                    }
+                }
+            }
+        }
+
+        val contentArr = item.optJSONArray("content")
+        if (contentArr != null && descContents == null) {
+            for (j in 0 until contentArr.length()) {
+                val v = contentArr.opt(j)?.toString()?.trim()
+                if (!v.isNullOrEmpty()) lines.add("  • $v")
+            }
+        }
+
+        val children = item.optJSONArray("children")
+        if (children != null) {
+            for (k in 0 until children.length()) {
+                val child = children.optJSONObject(k) ?: continue
+                appendChangelogSection(child, lines, level + 1)
+            }
+        }
+    }
+}
+
+private typealias JSONObject = org.json.JSONObject
