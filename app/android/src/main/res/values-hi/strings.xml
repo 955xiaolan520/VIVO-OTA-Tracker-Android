@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● एन्क्रिप्शन इंजन तैयार</string>
+    <string name="crypto_init">● एन्क्रिप्शन इंजन प्रारंभ हो रहा है\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">डिवाइस जानकारी मैन्युअल दर्ज करें</string>
+    <string name="label_codename">कोडनेम (जैसे PD2408)</string>
+    <string name="label_model_sw_ver">सार्वजनिक मॉडल (जैसे V2408A)</string>
+    <string name="label_series">श्रृंखला</string>
+    <string name="label_model">मॉडल</string>
+    <string name="label_device_type">डिवाइस प्रकार</string>
+    <string name="device_phone">फ़ोन</string>
+    <string name="device_tablet">टैबलेट</string>
+    <string name="label_android_version">Android संस्करण</string>
+    <string name="display_model">मॉडल: %1$s</string>
+    <string name="display_codename">कोडनेम: %1$s</string>
+    <string name="display_sw_ver">सॉफ़्टवेयर संस्करण: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">सिस्टम संस्करण (जैसे 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">एन्क्रिप्शन लाइब्रेरी x.x.x प्रारूप वाले पुराने उपकरणों के लिए संस्करण प्राप्ति का समर्थन नहीं करती</string>
+    <string name="label_sn">SN क्रमांक (वैकल्पिक)</string>
+    <string name="label_package_type">पैकेज प्रकार</string>
+    <string name="pkg_full">पूर्ण पैकेज</string>
+    <string name="pkg_incremental">वृद्धिशील</string>
+
+    <!-- Query -->
+    <string name="btn_query">OTA अपडेट खोजें</string>
+    <string name="querying">खोज जारी\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">खोज विफल: %1$s</string>
+    <string name="result_title">परिणाम</string>
+    <string name="current_version">वर्तमान संस्करण: %1$s</string>
+    <string name="latest_version">नवीनतम संस्करण: %1$s</string>
+    <string name="filename">फ़ाइल नाम: %1$s</string>
+    <string name="size_mb">आकार: %1$s MB</string>
+    <string name="security_patch">सुरक्षा पैच: %1$s</string>
+    <string name="update_date">अपडेट तिथि: %1$s</string>
+    <string name="btn_download">डाउनलोड</string>
+    <string name="btn_copy_link">लिंक कॉपी करें</string>
+    <string name="copied">कॉपी हो गया</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">बदलाव लॉग</string>
+    <string name="loading">लोड हो रहा है\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">खोज इतिहास (%1$d)</string>
+    <string name="btn_clear">साफ़ करें</string>
+    <string name="history_query">खोज: %1$s \u2192 %2$s</string>
+    <string name="history_size">आकार: %1$s MB</string>
+
+    <!-- About -->
+    <string name="about_developer">डेवलपर</string>
+    <string name="about_original_author">मूल लेखक</string>
+    <string name="about_reference">संदर्भ प्रोजेक्ट</string>
+    <string name="about_source">सोर्स रिपॉजिटरी</string>
+    <string name="about_disclaimer">यह ऐप केवल शैक्षणिक और अनुसंधान उद्देश्यों के लिए है।</string>
+    <string name="btn_close">बंद करें</string>
+
+    <!-- Toast -->
+    <string name="toast_success">खोज सफल</string>
+    <string name="toast_no_update">कोई अपडेट नहीं मिला</string>
+    <string name="no_changelog">कोई बदलाव लॉग उपलब्ध नहीं</string>
+</resources>

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mytiantian.updater.AndroidAppContext
+import com.mytiantian.updater.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -90,7 +91,8 @@ class VivoOtaViewModel : ViewModel() {
     private fun fetchChangelog(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val content = client.fetchChangelog(url)
-            _uiState.update { it.copy(changelogContent = content ?: "暂无更新日志") }
+            val ctx = AndroidAppContext.getApplicationContext()!!
+            _uiState.update { it.copy(changelogContent = content ?: ctx.getString(R.string.no_changelog)) }
         }
     }
 
@@ -139,17 +141,19 @@ class VivoOtaViewModel : ViewModel() {
                         result.filename != "(Not found)"
 
                 if (hasUpdate) {
+                    val ctx = AndroidAppContext.getApplicationContext()!!
                     addToHistory(modelName, codename, state.softwareVersion, result)
                     _uiState.update {
-                        it.copy(isLoading = false, result = result, toastMessage = "查询成功")
+                        it.copy(isLoading = false, result = result, toastMessage = ctx.getString(R.string.toast_success))
                     }
                     if (result.changelogUrl.isNotEmpty() && result.changelogUrl != "(Not found)") {
                         _uiState.update { it.copy(changelogContent = "loading") }
                         fetchChangelog(result.changelogUrl)
                     }
                 } else {
+                    val ctx = AndroidAppContext.getApplicationContext()!!
                     _uiState.update {
-                        it.copy(isLoading = false, result = result, toastMessage = "未查询到更新")
+                        it.copy(isLoading = false, result = result, toastMessage = ctx.getString(R.string.toast_no_update))
                     }
                 }
             } catch (e: Exception) {

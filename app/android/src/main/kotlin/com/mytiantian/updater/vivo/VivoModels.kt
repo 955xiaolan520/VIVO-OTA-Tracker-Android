@@ -7,6 +7,9 @@ data class VivoOtaResult(
     val fileSizeMb: String = "",
     val downloadUrl: String = "",
     val changelogUrl: String = "",
+    val securityPatch: String = "",
+    val updateDate: String = "",
+    val md5: String = "",
     val rawResponse: String = ""
 )
 

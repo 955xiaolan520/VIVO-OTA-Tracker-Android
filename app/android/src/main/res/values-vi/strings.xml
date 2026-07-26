@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● Công cụ mã hóa đã sẵn sàng</string>
+    <string name="crypto_init">● Đang khởi tạo công cụ mã hóa\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">Nhập thủ công thông tin thiết bị</string>
+    <string name="label_codename">Mã thiết bị (vd. PD2408)</string>
+    <string name="label_model_sw_ver">Model công khai (vd. V2408A)</string>
+    <string name="label_series">Dòng</string>
+    <string name="label_model">Model</string>
+    <string name="label_device_type">Loại thiết bị</string>
+    <string name="device_phone">Điện thoại</string>
+    <string name="device_tablet">Máy tính bảng</string>
+    <string name="label_android_version">Phiên bản Android</string>
+    <string name="display_model">Model: %1$s</string>
+    <string name="display_codename">Mã thiết bị: %1$s</string>
+    <string name="display_sw_ver">Phiên bản phần mềm: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">Phiên bản hệ thống (vd. 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">Thư viện mã hóa không hỗ trợ lấy phiên bản cho thiết bị cũ có định dạng x.x.x</string>
+    <string name="label_sn">Số seri SN (tùy chọn)</string>
+    <string name="label_package_type">Loại gói</string>
+    <string name="pkg_full">Gói đầy đủ</string>
+    <string name="pkg_incremental">Gói tăng dần</string>
+
+    <!-- Query -->
+    <string name="btn_query">Tra cứu cập nhật OTA</string>
+    <string name="querying">Đang tra cứu\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">Tra cứu thất bại: %1$s</string>
+    <string name="result_title">Kết quả</string>
+    <string name="current_version">Phiên bản hiện tại: %1$s</string>
+    <string name="latest_version">Phiên bản mới nhất: %1$s</string>
+    <string name="filename">Tên tệp: %1$s</string>
+    <string name="size_mb">Kích thước: %1$s MB</string>
+    <string name="security_patch">Bản vá bảo mật: %1$s</string>
+    <string name="update_date">Ngày cập nhật: %1$s</string>
+    <string name="btn_download">Tải xuống</string>
+    <string name="btn_copy_link">Sao chép liên kết</string>
+    <string name="copied">Đã sao chép</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">Nhật ký cập nhật</string>
+    <string name="loading">Đang tải\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">Lịch sử tra cứu (%1$d)</string>
+    <string name="btn_clear">Xóa</string>
+    <string name="history_query">Tra cứu: %1$s \u2192 %2$s</string>
+    <string name="history_size">Kích thước: %1$s MB</string>
+
+    <!-- About -->
+    <string name="about_developer">Nhà phát triển</string>
+    <string name="about_original_author">Tác giả gốc</string>
+    <string name="about_reference">Dự án tham khảo</string>
+    <string name="about_source">Kho mã nguồn</string>
+    <string name="about_disclaimer">Ứng dụng này chỉ dành cho mục đích giáo dục và nghiên cứu.</string>
+    <string name="btn_close">Đóng</string>
+
+    <!-- Toast -->
+    <string name="toast_success">Tra cứu thành công</string>
+    <string name="toast_no_update">Không tìm thấy cập nhật</string>
+    <string name="no_changelog">Không có nhật ký cập nhật</string>
+</resources>

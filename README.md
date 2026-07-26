@@ -11,8 +11,10 @@ By loading the native `libvivoseckey.so` library, this app processes the necessa
 * 🔒 **Native Encryption**: Powered by `libvivoseckey.so` JNI engine — all encryption/decryption happens on-device, no server required.
 * 📱 **Multi-Device Support**: Built-in database of 14 series and 395+ models, plus manual input mode for devices not in the database.
 * 🔄 **Full / Incremental**: Query both full firmware packages and incremental OTA updates.
-* 📋 **Query History**: Locally persisted query history with one-tap link copying.
-* 📝 **Inline Changelog**: Update logs displayed directly in-app, no browser needed.
+* 🌐 **Multilingual**: 11 languages — English, 简体中文, 繁體中文, Русский, Bahasa Indonesia, ภาษาไทย, Tiếng Việt, हिन्दी, 日本語, 한국어. Follows system language automatically.
+* 📋 **Query History**: Collapsible, locally persisted query history with one-tap link copying.
+* 📝 **Inline Changelog**: Update logs parsed and displayed directly in-app, no browser needed.
+* 🔒 **Security Info**: Displays security patch level and update date when available.
 * 🌙 **Auto Theme**: Dark / Light theme follows system setting automatically.
 
 ---

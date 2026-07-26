@@ -2,7 +2,7 @@ object ProjectConfig {
     const val JVM_VERSION = 25
     const val APP_NAME = "Updater"
     const val PACKAGE_NAME = "com.mytiantian.updater"
-    const val VERSION_NAME = "1.1.0"
+    const val VERSION_NAME = "1.2.0"
 
     object Android {
         const val TARGET_SDK = 37

@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● Mesin enkripsi siap</string>
+    <string name="crypto_init">● Menginisialisasi mesin enkripsi\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">Input perangkat secara manual</string>
+    <string name="label_codename">Nama kode (mis. PD2408)</string>
+    <string name="label_model_sw_ver">Model publik (mis. V2408A)</string>
+    <string name="label_series">Seri</string>
+    <string name="label_model">Model</string>
+    <string name="label_device_type">Jenis perangkat</string>
+    <string name="device_phone">Ponsel</string>
+    <string name="device_tablet">Tablet</string>
+    <string name="label_android_version">Versi Android</string>
+    <string name="display_model">Model: %1$s</string>
+    <string name="display_codename">Nama kode: %1$s</string>
+    <string name="display_sw_ver">Versi perangkat lunak: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">Versi sistem (mis. 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">Pustaka enkripsi tidak mendukung pengambilan versi untuk perangkat lama dengan format x.x.x</string>
+    <string name="label_sn">Nomor seri SN (opsional)</string>
+    <string name="label_package_type">Jenis paket</string>
+    <string name="pkg_full">Paket lengkap</string>
+    <string name="pkg_incremental">Inkremental</string>
+
+    <!-- Query -->
+    <string name="btn_query">Cari Pembaruan OTA</string>
+    <string name="querying">Mencari\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">Pencarian gagal: %1$s</string>
+    <string name="result_title">Hasil</string>
+    <string name="current_version">Versi saat ini: %1$s</string>
+    <string name="latest_version">Versi terbaru: %1$s</string>
+    <string name="filename">Nama file: %1$s</string>
+    <string name="size_mb">Ukuran: %1$s MB</string>
+    <string name="security_patch">Patch keamanan: %1$s</string>
+    <string name="update_date">Tanggal pembaruan: %1$s</string>
+    <string name="btn_download">Unduh</string>
+    <string name="btn_copy_link">Salin tautan</string>
+    <string name="copied">Tersalin</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">Catatan perubahan</string>
+    <string name="loading">Memuat\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">Riwayat pencarian (%1$d)</string>
+    <string name="btn_clear">Bersihkan</string>
+    <string name="history_query">Cari: %1$s \u2192 %2$s</string>
+    <string name="history_size">Ukuran: %1$s MB</string>
+
+    <!-- About -->
+    <string name="about_developer">Pengembang</string>
+    <string name="about_original_author">Penulis asli</string>
+    <string name="about_reference">Proyek referensi</string>
+    <string name="about_source">Repositori sumber</string>
+    <string name="about_disclaimer">Aplikasi ini hanya untuk tujuan pendidikan dan penelitian.</string>
+    <string name="btn_close">Tutup</string>
+
+    <!-- Toast -->
+    <string name="toast_success">Pencarian berhasil</string>
+    <string name="toast_no_update">Tidak ada pembaruan ditemukan</string>
+    <string name="no_changelog">Catatan perubahan tidak tersedia</string>
+</resources>

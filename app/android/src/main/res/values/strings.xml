@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● Encryption engine ready</string>
+    <string name="crypto_init">● Initializing encryption engine\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">Manual input device info</string>
+    <string name="label_codename">Codename (e.g. PD2408)</string>
+    <string name="label_model_sw_ver">Public model (e.g. V2408A)</string>
+    <string name="label_series">Series</string>
+    <string name="label_model">Model</string>
+    <string name="label_device_type">Device type</string>
+    <string name="device_phone">Phone</string>
+    <string name="device_tablet">Tablet</string>
+    <string name="label_android_version">Android version</string>
+    <string name="display_model">Model: %1$s</string>
+    <string name="display_codename">Codename: %1$s</string>
+    <string name="display_sw_ver">SW version: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">System version (e.g. 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">The encryption library does not support version retrieval for older devices with x.x.x format</string>
+    <string name="label_sn">SN serial number (optional)</string>
+    <string name="label_package_type">Package type</string>
+    <string name="pkg_full">Full package</string>
+    <string name="pkg_incremental">Incremental</string>
+
+    <!-- Query -->
+    <string name="btn_query">Query OTA Update</string>
+    <string name="querying">Querying\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">Query failed: %1$s</string>
+    <string name="result_title">Result</string>
+    <string name="current_version">Current version: %1$s</string>
+    <string name="latest_version">Latest version: %1$s</string>
+    <string name="filename">Filename: %1$s</string>
+    <string name="size_mb">Size: %1$s MB</string>
+    <string name="security_patch">Security patch: %1$s</string>
+    <string name="update_date">Update date: %1$s</string>
+    <string name="btn_download">Download</string>
+    <string name="btn_copy_link">Copy link</string>
+    <string name="copied">Copied</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">Changelog</string>
+    <string name="loading">Loading\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">Query history (%1$d)</string>
+    <string name="btn_clear">Clear</string>
+    <string name="history_query">Query: %1$s \u2192 %2$s</string>
+    <string name="history_size">Size: %1$s MB</string>
+
+    <!-- About -->
+    <string name="about_developer">Developer</string>
+    <string name="about_original_author">Original Author</string>
+    <string name="about_reference">Reference Project</string>
+    <string name="about_source">Source Repository</string>
+    <string name="about_disclaimer">This app is for educational and research purposes only.</string>
+    <string name="btn_close">Close</string>
+
+    <!-- Toast -->
+    <string name="toast_success">Query successful</string>
+    <string name="toast_no_update">No update found</string>
+    <string name="no_changelog">No changelog available</string>
+</resources>

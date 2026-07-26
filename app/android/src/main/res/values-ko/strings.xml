@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● 암호화 엔진 준비 완료</string>
+    <string name="crypto_init">● 암호화 엔진 초기화 중\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">기기 정보 수동 입력</string>
+    <string name="label_codename">코드명 (예: PD2408)</string>
+    <string name="label_model_sw_ver">공개 모델 (예: V2408A)</string>
+    <string name="label_series">시리즈</string>
+    <string name="label_model">모델</string>
+    <string name="label_device_type">기기 유형</string>
+    <string name="device_phone">폰</string>
+    <string name="device_tablet">태블릿</string>
+    <string name="label_android_version">Android 버전</string>
+    <string name="display_model">모델: %1$s</string>
+    <string name="display_codename">코드명: %1$s</string>
+    <string name="display_sw_ver">소프트웨어 버전: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">시스템 버전 (예: 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">암호화 라이브러리는 이전 기기의 x.x.x 형식 버전 조회를 지원하지 않습니다</string>
+    <string name="label_sn">SN 일련번호 (선택)</string>
+    <string name="label_package_type">패키지 유형</string>
+    <string name="pkg_full">전체 패키지</string>
+    <string name="pkg_incremental">증분</string>
+
+    <!-- Query -->
+    <string name="btn_query">OTA 업데이트 조회</string>
+    <string name="querying">조회 중\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">조회 실패: %1$s</string>
+    <string name="result_title">결과</string>
+    <string name="current_version">현재 버전: %1$s</string>
+    <string name="latest_version">최신 버전: %1$s</string>
+    <string name="filename">파일명: %1$s</string>
+    <string name="size_mb">크기: %1$s MB</string>
+    <string name="security_patch">보안 패치: %1$s</string>
+    <string name="update_date">업데이트 날짜: %1$s</string>
+    <string name="btn_download">다운로드</string>
+    <string name="btn_copy_link">링크 복사</string>
+    <string name="copied">복사됨</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">변경 사항</string>
+    <string name="loading">로딩 중\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">조회 기록 (%1$d)</string>
+    <string name="btn_clear">삭제</string>
+    <string name="history_query">조회: %1$s \u2192 %2$s</string>
+    <string name="history_size">크기: %1$s MB</string>
+
+    <!-- About -->
+    <string name="about_developer">개발자</string>
+    <string name="about_original_author">원작자</string>
+    <string name="about_reference">참고 프로젝트</string>
+    <string name="about_source">소스 저장소</string>
+    <string name="about_disclaimer">이 앱은 교육 및 연구 목적으로만 사용됩니다.</string>
+    <string name="btn_close">닫기</string>
+
+    <!-- Toast -->
+    <string name="toast_success">조회 성공</string>
+    <string name="toast_no_update">업데이트를 찾을 수 없습니다</string>
+    <string name="no_changelog">변경 사항이 없습니다</string>
+</resources>

@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● 加密引擎就绪</string>
+    <string name="crypto_init">● 正在初始化加密引擎\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">手动输入设备信息</string>
+    <string name="label_codename">代号 (如: PD2408)</string>
+    <string name="label_model_sw_ver">公开型号 (如: V2408A)</string>
+    <string name="label_series">系列</string>
+    <string name="label_model">型号</string>
+    <string name="label_device_type">设备类型</string>
+    <string name="device_phone">手机</string>
+    <string name="device_tablet">平板</string>
+    <string name="label_android_version">Android 版本</string>
+    <string name="display_model">型号: %1$s</string>
+    <string name="display_codename">代号: %1$s</string>
+    <string name="display_sw_ver">软件版本号: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">系统版本号 (例如: 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">加密库不支持早期旧设备的 x.x.x 版本号获取</string>
+    <string name="label_sn">SN 序列号 (可选)</string>
+    <string name="label_package_type">包类型</string>
+    <string name="pkg_full">完整包</string>
+    <string name="pkg_incremental">增量包</string>
+
+    <!-- Query -->
+    <string name="btn_query">查询 OTA 更新</string>
+    <string name="querying">查询中\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">查询失败: %1$s</string>
+    <string name="result_title">查询结果</string>
+    <string name="current_version">当前版本: %1$s</string>
+    <string name="latest_version">最新版本: %1$s</string>
+    <string name="filename">文件名: %1$s</string>
+    <string name="size_mb">大小: %1$s MB</string>
+    <string name="security_patch">安全补丁: %1$s</string>
+    <string name="update_date">更新日期: %1$s</string>
+    <string name="btn_download">下载</string>
+    <string name="btn_copy_link">复制链接</string>
+    <string name="copied">已复制</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">更新日志</string>
+    <string name="loading">加载中\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">查询历史 (%1$d)</string>
+    <string name="btn_clear">清空</string>
+    <string name="history_query">查询: %1$s \u2192 %2$s</string>
+    <string name="history_size">大小: %1$s MB</string>
+
+    <!-- About -->
+    <string name="about_developer">开发者</string>
+    <string name="about_original_author">原项目作者</string>
+    <string name="about_reference">参考项目</string>
+    <string name="about_source">源码仓库</string>
+    <string name="about_disclaimer">本应用仅供学习研究使用</string>
+    <string name="btn_close">关闭</string>
+
+    <!-- Toast -->
+    <string name="toast_success">查询成功</string>
+    <string name="toast_no_update">未查询到更新</string>
+    <string name="no_changelog">暂无更新日志</string>
+</resources>

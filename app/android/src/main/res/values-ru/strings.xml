@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">VIVO OTA Tracker</string>
+
+    <!-- Crypto status -->
+    <string name="crypto_ready">● Движок шифрования готов</string>
+    <string name="crypto_init">● Инициализация движка шифрования\u2026</string>
+
+    <!-- Device selection -->
+    <string name="manual_input">Ручной ввод данных устройства</string>
+    <string name="label_codename">Кодовое имя (напр. PD2408)</string>
+    <string name="label_model_sw_ver">Публичная модель (напр. V2408A)</string>
+    <string name="label_series">Серия</string>
+    <string name="label_model">Модель</string>
+    <string name="label_device_type">Тип устройства</string>
+    <string name="device_phone">Телефон</string>
+    <string name="device_tablet">Планшет</string>
+    <string name="label_android_version">Версия Android</string>
+    <string name="display_model">Модель: %1$s</string>
+    <string name="display_codename">Кодовое имя: %1$s</string>
+    <string name="display_sw_ver">Версия ПО: %1$s</string>
+
+    <!-- Version input -->
+    <string name="label_sw_version">Версия системы (напр. 16.1.16.5.W10)</string>
+    <string name="hint_sw_version">Библиотека шифрования не поддерживает получение версии для старых устройств в формате x.x.x</string>
+    <string name="label_sn">Серийный номер SN (необязательно)</string>
+    <string name="label_package_type">Тип пакета</string>
+    <string name="pkg_full">Полный пакет</string>
+    <string name="pkg_incremental">Инкрементальный</string>
+
+    <!-- Query -->
+    <string name="btn_query">Запросить OTA-обновление</string>
+    <string name="querying">Запрос\u2026</string>
+
+    <!-- Result -->
+    <string name="query_failed">Ошибка запроса: %1$s</string>
+    <string name="result_title">Результат</string>
+    <string name="current_version">Текущая версия: %1$s</string>
+    <string name="latest_version">Последняя версия: %1$s</string>
+    <string name="filename">Имя файла: %1$s</string>
+    <string name="size_mb">Размер: %1$s МБ</string>
+    <string name="security_patch">Патч безопасности: %1$s</string>
+    <string name="update_date">Дата обновления: %1$s</string>
+    <string name="btn_download">Скачать</string>
+    <string name="btn_copy_link">Копировать ссылку</string>
+    <string name="copied">Скопировано</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">Список изменений</string>
+    <string name="loading">Загрузка\u2026</string>
+
+    <!-- History -->
+    <string name="history_title">История запросов (%1$d)</string>
+    <string name="btn_clear">Очистить</string>
+    <string name="history_query">Запрос: %1$s \u2192 %2$s</string>
+    <string name="history_size">Размер: %1$s МБ</string>
+
+    <!-- About -->
+    <string name="about_developer">Разработчик</string>
+    <string name="about_original_author">Оригинальный автор</string>
+    <string name="about_reference">Референсный проект</string>
+    <string name="about_source">Репозиторий исходного кода</string>
+    <string name="about_disclaimer">Это приложение предназначено только для образовательных и исследовательских целей.</string>
+    <string name="btn_close">Закрыть</string>
+
+    <!-- Toast -->
+    <string name="toast_success">Запрос выполнен</string>
+    <string name="toast_no_update">Обновление не найдено</string>
+    <string name="no_changelog">Список изменений недоступен</string>
+</resources>

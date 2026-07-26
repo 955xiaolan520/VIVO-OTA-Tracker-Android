@@ -140,13 +140,29 @@ class VivoOtaClient(private val context: Context) {
         codename: String,
         swVersion: String
     ): VivoOtaResult {
+        Log.d(TAG, "Raw OTA response: $updateResponse")
+
         val updateVersion = extractJsonStr(updateResponse, "version\":\"")
         val pkName = extractJsonStr(updateResponse, "pkName\":\"")
         val pkLen = extractJsonStr(updateResponse, "pkLen\":\"")
         val sizeMb = try { (pkLen.toLong() / 1048576).toString() } catch (_: Exception) { "" }
 
         var downloadUrl = ""
-        var changelogUrl = ""
+
+        val changelogUrl = extractJsonStr(updateResponse, "h5Url\":\"").let {
+            if (it == "(Not found)") "" else it.replace("\\/", "/").replace(Regex("/index\\.html$"), "/data/CN.js")
+        }
+        Log.d(TAG, "Changelog URL: '$changelogUrl'")
+
+        val securityPatch = extractFirstAvailable(updateResponse, listOf(
+            "securityPatch\":\"", "securityPath\":\"", "spVersion\":\"", "sp\":\"", "secPatch\":\""
+        ))
+        val updateDate = extractFirstAvailable(updateResponse, listOf(
+            "createTime\":\"", "updateTime\":\"", "updatetime\":\"", "releaseTime\":\"", "pubdate\":\"", "submitTime\":\""
+        ))
+        val md5 = extractFirstAvailable(updateResponse, listOf("md5\":\"", "fileMd5\":\"", "pkMd5\":\""))
+
+        Log.d(TAG, "Security patch: '$securityPatch', Update date: '$updateDate', MD5: '$md5'")
 
         val pkUrl = extractPkUrl(updateResponse)
         if (pkUrl != null) {
@@ -154,6 +170,7 @@ class VivoOtaClient(private val context: Context) {
                 val queryStart = pkUrl.indexOf("?")
                 val redirParams = if (queryStart >= 0) pkUrl.substring(queryStart + 1) else pkUrl
                 val redirRes = requestRedirPost(redirParams)
+                Log.d(TAG, "Redir response: $redirRes")
                 val dataIdx = redirRes.indexOf("\"data\":\"")
                 if (dataIdx >= 0) {
                     val urlStart = dataIdx + 8
@@ -162,7 +179,6 @@ class VivoOtaClient(private val context: Context) {
                         downloadUrl = redirRes.substring(urlStart, urlEnd).replace("\\/", "/")
                     }
                 }
-                changelogUrl = extractJsonStr(updateResponse, "h5Url\":\"").replace("\\/", "/")
             } catch (e: Exception) {
                 Log.w(TAG, "redirPost failed: ${e.message}")
             }
@@ -175,6 +191,9 @@ class VivoOtaClient(private val context: Context) {
             fileSizeMb = sizeMb,
             downloadUrl = downloadUrl,
             changelogUrl = changelogUrl,
+            securityPatch = securityPatch,
+            updateDate = updateDate,
+            md5 = md5,
             rawResponse = updateResponse
         )
     }
@@ -200,6 +219,16 @@ class VivoOtaClient(private val context: Context) {
             return if (realEnd < 0) json.substring(start) else json.substring(start, realEnd).trim()
         }
         return json.substring(start, end)
+    }
+
+    private fun extractFirstAvailable(json: String, keys: List<String>): String {
+        for (key in keys) {
+            val value = extractJsonStr(json, key)
+            if (value != "(Not found)" && value.isNotEmpty()) {
+                return value
+            }
+        }
+        return ""
     }
 
     // ================================================================
@@ -294,6 +323,8 @@ class VivoOtaClient(private val context: Context) {
         val url = URL(urlString)
         val conn = url.openConnection() as HttpURLConnection
         conn.requestMethod = "POST"
+        conn.connectTimeout = 15000
+        conn.readTimeout = 15000
         conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
         conn.setRequestProperty("User-Agent", "okhttp/4.3.23")
         conn.setRequestProperty("Host", "sysupgrade.vivo.com.cn")
@@ -318,8 +349,15 @@ class VivoOtaClient(private val context: Context) {
     fun fetchChangelog(url: String): String? {
         if (url.isEmpty()) return null
         return try {
-            val json = httpGet(url)
-            parseChangelogJson(json)
+            val response = httpGet(url)
+            Log.d(TAG, "Changelog response (${response.length} chars): ${response.take(500)}")
+            if (response.trimStart().startsWith("{")) {
+                parseChangelogJson(response)
+            } else if (response.trimStart().startsWith("<")) {
+                parseChangelogHtml(response)
+            } else {
+                response.trim()
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Changelog fetch failed: ${e.message}")
             null
@@ -393,6 +431,24 @@ class VivoOtaClient(private val context: Context) {
                 appendChangelogSection(child, lines, level + 1)
             }
         }
+    }
+
+    private fun parseChangelogHtml(html: String): String {
+        var text = html
+        text = text.replace(Regex("<script[^>]*>[\\s\\S]*?</script>", RegexOption.IGNORE_CASE), "")
+        text = text.replace(Regex("<style[^>]*>[\\s\\S]*?</style>", RegexOption.IGNORE_CASE), "")
+        text = text.replace(Regex("<head[^>]*>[\\s\\S]*?</head>", RegexOption.IGNORE_CASE), "")
+        text = text.replace(Regex("<(br|/p|/div|/li|/h[1-6]|/tr)[^>]*>", RegexOption.IGNORE_CASE), "\n")
+        text = text.replace(Regex("<[^>]+>"), "")
+        text = text.replace("&nbsp;", " ")
+        text = text.replace("&amp;", "&")
+        text = text.replace("&lt;", "<")
+        text = text.replace("&gt;", ">")
+        text = text.replace("&quot;", "\"")
+        text = text.replace("&#39;", "'")
+        text = text.replace(Regex("&#[0-9]+;"), "")
+        text = text.lines().map { it.trim() }.filter { it.isNotEmpty() }.joinToString("\n").trim()
+        return text
     }
 }
 
