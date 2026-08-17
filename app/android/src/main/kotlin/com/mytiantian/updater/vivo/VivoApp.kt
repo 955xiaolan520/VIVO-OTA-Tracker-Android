@@ -31,6 +31,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -437,6 +438,13 @@ private fun ResultCard(result: VivoOtaResult, changelogContent: String?, current
             }
             if (result.downloadUrl.isNotEmpty()) {
                 HorizontalDivider()
+                SelectionContainer(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = result.downloadUrl,
+                        color = MiuixTheme.colorScheme.primary,
+                        fontSize = 13.sp
+                    )
+                }
                 Row(modifier = Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = {
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(result.downloadUrl)))
@@ -444,7 +452,7 @@ private fun ResultCard(result: VivoOtaResult, changelogContent: String?, current
                     Button(onClick = {
                         val cb = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         cb.setPrimaryClip(ClipData.newPlainText("url", result.downloadUrl))
-                        Toast.makeText(context, copiedMsg, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, copiedMsg, Toast.LENGTH_LONG).show()
                     }) { Text(stringResource(R.string.btn_copy_link)) }
                 }
             }
@@ -560,7 +568,7 @@ private fun AboutDialog(onDismiss: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(stringResource(R.string.app_name), fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                Text("v1.2.0", fontSize = 13.sp, color = MiuixTheme.colorScheme.onSurfaceVariantSummary)
+                Text("v1.6.6", fontSize = 13.sp, color = MiuixTheme.colorScheme.onSurfaceVariantSummary)
                 Spacer(modifier = Modifier.height(12.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(10.dp))
@@ -573,6 +581,15 @@ private fun AboutDialog(onDismiss: () -> Unit) {
                     fontSize = 12.sp,
                     modifier = Modifier.clickable {
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/u/4430874")))
+                    }
+                )
+                Text("probiotics", fontSize = 13.sp)
+                Text(
+                    text = "Coolapk @probiotics",
+                    color = MiuixTheme.colorScheme.primary,
+                    fontSize = 12.sp,
+                    modifier = Modifier.clickable {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/")))
                     }
                 )
                 Spacer(modifier = Modifier.height(6.dp))
